@@ -5,7 +5,6 @@ class Board(object):
     """
     board for the game
     """
-
     def __init__(self, **kwargs):
         self.width = int(kwargs.get('width', 8))
         self.height = int(kwargs.get('height', 8))
@@ -45,7 +44,7 @@ class Board(object):
 
     def current_state(self):
         """return the board state from the perspective of the current player
-        shape: 4*width*height"""
+        channel last(tensorflow version)"""
 
         square_state = np.zeros([self.width, self.height,4])
         if self.states:
@@ -54,7 +53,7 @@ class Board(object):
             move_oppo = moves[players != self.current_player]
             square_state[(move_curr // self.width), (move_curr % self.height),0] = 1.0
             square_state[(move_oppo // self.width), (move_oppo % self.height),1]= 1.0
-            square_state[(self.last_move // self.width), (self.last_move % self.height),2] = 1.0  # last move indication
+            square_state[(self.last_move // self.width), (self.last_move % self.height),2] = 1.0
         if len(self.states) % 2 == 0:
             square_state[:, :,3] = 1.0
         return square_state[:, ::-1, :]
@@ -103,7 +102,7 @@ class Board(object):
         win, winner = self.has_a_winner()
         if win:
             return True, winner
-        elif not len(self.availables):  #
+        elif not len(self.availables):
             return True, -1
         return False, -1
 

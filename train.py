@@ -1,11 +1,10 @@
 import random
 import numpy as np
-import pickle
 from collections import defaultdict, deque
-from game import Board, Game
-from policy_value_net import PolicyValueNet
-from mcts_pure import MCTSPlayer as MCTS_Pure
-from mcts_alphaZero import MCTSPlayer
+from AlphagoZero.game import Board, Game
+from AlphagoZero.policy_value_net import PolicyValueNet
+from AlphagoZero.mcts_pure import MCTSPlayer as MCTS_Pure
+from AlphagoZero.mcts_alphaZero import MCTSPlayer
 
 
 
@@ -79,6 +78,7 @@ class TrainPipeline():
             loss, entropy = self.policy_value_net.train_step(state_batch, mcts_probs_batch, winner_batch,
                                                              self.learn_rate * self.lr_multiplier)
             new_probs, new_v = self.policy_value_net.policy_value(state_batch)
+            #calc D_KL between old probs and new probs
             kl = np.mean(np.sum(old_probs * (np.log(old_probs + 1e-10) - np.log(new_probs + 1e-10)), axis=1))
             if kl > self.kl_targ * 4:  # early stopping if D_KL diverges badly
                 break
@@ -120,18 +120,15 @@ class TrainPipeline():
                 print("batch i:{}, episode_len:{}".format(i + 1, self.episode_len))
                 if len(self.data_buffer) > self.batch_size:
                     loss, entropy = self.policy_update()
-                    # check the performance of the current model，and save the model params
+                # check the performance of the current model，and save the model params
                 if (i + 1) % self.check_freq == 0:
                     print("current self-play batch: {}".format(i + 1))
                     win_ratio = self.policy_evaluate()
-                    net_params = self.policy_value_net.get_policy_param()  # get model params
-                    pickle.dump(net_params, open('current_policy.model', 'wb'),
-                                pickle.HIGHEST_PROTOCOL)  # save model param to file
+                    self.policy_value_net.save_model("./current_policy_model")
                     if win_ratio > self.best_win_ratio:
                         print("New best policy!!!!!!!!")
                         self.best_win_ratio = win_ratio
-                        pickle.dump(net_params, open('best_policy.model', 'wb'),
-                                    pickle.HIGHEST_PROTOCOL)  # update the best_policy
+                        self.policy_value_net.save_model("./best_policy.model")
                         if self.best_win_ratio == 1.0 and self.pure_mcts_playout_num < 5000:
                             self.pure_mcts_playout_num += 1000
                             self.best_win_ratio = 0.0

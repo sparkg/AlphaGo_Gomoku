@@ -12,7 +12,6 @@ class TreeNode(object):
     """A node in the MCTS tree. Each node keeps track of its own value Q, prior probability P, and
     its visit-count-adjusted prior score u.
     """
-
     def __init__(self, parent, prior_p):
         self._parent = parent
         self._children = {}  # a map from action to TreeNode
@@ -181,6 +180,7 @@ class MCTSPlayer(object):
             move_probs[list(acts)] = probs
             if self._is_selfplay:
                 # add Dirichlet Noise for exploration (needed for self-play training)
+                #actually it is Fermi-Dirac distribution(No )
                 move = np.random.choice(acts, p=0.75 * probs + 0.25 * np.random.dirichlet(0.3 * np.ones(len(probs))))
                 self.mcts.update_with_move(move)  # update the root node and reuse the search tree
             else:

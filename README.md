@@ -36,6 +36,7 @@ A BiDirect Tree Node that contains:
 * UCT alogrithm U
 
 It can:<br>
+  |:---|:---|
 * |select|choose move by Q + U greedy|
 * |expand|expand a leaf node by actions and probabilities|
 * |update| N and Q|

@@ -36,14 +36,14 @@ A BiDirect Tree Node that contains:
 * UCT alogrithm U
 
 It can:<br>
-* select      choose move by Q + U greedy
-* expand      expand a leaf node by actions and probabilities
-* update      N and Q
+* select   >>   choose move by Q + U greedy
+* expand   >>   expand a leaf node by actions and probabilities
+* update   >>   N and Q
 
 With the help of MCT Node, a MCTS can:<br>
-* play_a_step choose a move greedy until leaf node, expand chilren by CNN blocks
-* simulate    simulate and update MCT in N times, return all actions and probabilities
-* move move with highest probability
+* play_a_step >> choose a move greedy until leaf node, expand chilren by CNN blocks
+* simulate  >>  simulate and update MCT in N times, return all actions and probabilities
+* move    >>    move with highest probability
 
 ### Training 
 We collect self play data with dirac noise and shift with randomly rotate.<br>

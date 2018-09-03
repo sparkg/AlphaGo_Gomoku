@@ -21,7 +21,7 @@ Keras version:2.1.5
 * output: list p for every available position
         value v for confidence of winning
         
-structure:  3*convs + {conv+flatten+dense, conv+flatten+dense+dense}
+* structure:  3*convs + {conv+flatten+dense, conv+flatten+dense+dense}
 
 
 
